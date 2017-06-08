@@ -25,11 +25,12 @@ type SSHClientConfig struct {
 	Privatekey        string
 	DialTimeoutSecond int
 	MaxDataThroughput uint64
+	HostKeyCallback   ssh.HostKeyCallback
 }
 
-func makeConfig(user string, password string, privateKey string) (config *ssh.ClientConfig) {
+func makeConfig(user string, password string, privateKey string, hostKeyCallback ssh.HostKeyCallback) (config *ssh.ClientConfig) {
 
-	if password == "" && user == "" {
+	if password == "" && privateKey == "" {
 		log.Fatal("No password or private key available")
 	}
 	config = &ssh.ClientConfig{
@@ -37,6 +38,7 @@ func makeConfig(user string, password string, privateKey string) (config *ssh.Cl
 		Auth: []ssh.AuthMethod{
 			ssh.Password(password),
 		},
+		HostKeyCallback: hostKeyCallback,
 	}
 	if privateKey != "" {
 		signer, err := ssh.ParsePrivateKey([]byte(privateKey))
@@ -49,6 +51,7 @@ func makeConfig(user string, password string, privateKey string) (config *ssh.Cl
 			Auth: []ssh.AuthMethod{
 				clientkey,
 			},
+			HostKeyCallback: hostKeyCallback,
 		}
 	}
 	return

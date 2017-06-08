@@ -14,10 +14,11 @@ type LocalForwardServer struct {
 //create tunnel
 func (this *LocalForwardServer) createTunnel() {
 	config := &SSHClientConfig{
-		User:       this.SshUserName,
-		Password:   this.SshUserPassword,
-		Host:       this.SshServerAddress,
-		Privatekey: this.SshPrivateKey,
+		User:            this.SshUserName,
+		Password:        this.SshUserPassword,
+		Host:            this.SshServerAddress,
+		Privatekey:      this.SshPrivateKey,
+		HostKeyCallback: this.HostKeyCallback,
 	}
 	sshclient := NewSSHClient(config)
 	conn, err := sshclient.Connect()
